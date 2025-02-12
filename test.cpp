@@ -56,11 +56,13 @@ int main() {
 
     image->mask(data);
     image->rotate();
+    /*
     for(;;){
         sender->send(image->get_processed_image(), 48771);
         sender->next();
         usleep(250000);
     }
+    */
     return 0;
 }
 
