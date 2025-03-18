@@ -53,6 +53,11 @@ class DisplayManager{
             processor = new ImageProcessor(imheight, imwidth, tpad, sratio, eratio, dpad, leds, this->height);
             processor->calc_row();
         }
+        void display(uint32_t* pixels){
+            this->processor->mask(pixels);
+            this->processor->rotate();
+            sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
+        }
         void display(unsigned char* pixels){
             this->processor->mask(pixels);
             this->processor->rotate();
