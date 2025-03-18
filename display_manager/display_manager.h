@@ -14,7 +14,7 @@
 
 using namespace std;
 
-#define DEFAULT_PATH "opt/sphere/sphere_spec.json"
+#define DEFAULT_PATH "/opt/sphere/sphere_spec.json"
 
 class DisplayManager{
     public:
