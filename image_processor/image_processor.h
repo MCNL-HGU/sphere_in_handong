@@ -3,7 +3,7 @@
 class ImageProcessor{
     public:
         //ratio will only accept the value as multiples of 30
-        ImageProcessor(int height, int width, int tpad, int sratio, int eratio, int dpad, int* rows, int row_size){
+        ImageProcessor(int height, int width, int tpad, int sratio, int eratio, int dpad, int* rows, int row_size, int* alias){
             this->height = height;
             this->width = width;
             this->tpad = tpad;
@@ -13,6 +13,7 @@ class ImageProcessor{
             this->rows = rows;
             this->calc_row_size = row_size-tpad-dpad;
             this->dpad = dpad;
+            this->alias = alias;
             if(row_size > tpad)
                 calc_rows = new int[calc_row_size];
 
@@ -60,6 +61,7 @@ class ImageProcessor{
         int processed_image_size;
         int *calc_rows=nullptr;
         int *rows=nullptr;
+        int *alias=nullptr;
         unsigned char *partial_buf=nullptr;
         unsigned char *processed_image=nullptr;
 };

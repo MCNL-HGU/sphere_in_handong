@@ -50,7 +50,7 @@ class DisplayManager{
                 this->alias[i] = this->json_root["alias"][i].asInt();
             }
             sender = new E131Sender(ip, port);
-            processor = new ImageProcessor(imheight, imwidth, tpad, sratio, eratio, dpad, leds, this->height);
+            processor = new ImageProcessor(imheight, imwidth, tpad, sratio, eratio, dpad, leds, this->height, this->alias);
             processor->calc_row();
         }
         void display(uint32_t* pixels){

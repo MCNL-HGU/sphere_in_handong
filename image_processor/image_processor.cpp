@@ -192,15 +192,8 @@ int ImageProcessor::rotate(){
     unsigned char * p_partial_buf = partial_buf;
     long long idx = 0;
     int h = 0;
+
     if(!processed_image) return 1;
-/*
-    for(int i = 0; i < partial_buf_size; i+=3){
-        cout << "(" << (unsigned int)partial_buf[i] << " " << (unsigned int)partial_buf[i+1] << " " << (unsigned int)partial_buf[i+2] << ")";
-    }
-  
-  */
-    //cout << endl;
-    //cout << processed_image_size << " " << sratio << endl;
     memset(processed_image, 0, processed_image_size);
     while(idx < processed_image_size){
         if(h >= tpad+calc_row_size){
@@ -211,23 +204,13 @@ int ImageProcessor::rotate(){
             h++;
             continue;
         }
-        int lpad = ((int)((sratio/360.0)*rows[h]))*3;
+        int lpad = ((int)((sratio/360.0)*rows[h]))*3+this->alias[h];
         int row_ch= rows[h]*3;
         int calc_row_ch = calc_rows[h-tpad]*3;
         memcpy(processed_image+(idx+lpad), p_partial_buf, min(row_ch-lpad, calc_row_ch));
-        //cout << lpad << "," << row_ch << "," << calc_row_ch << endl;
         if(row_ch-lpad < calc_row_ch){
             memcpy(processed_image+idx, p_partial_buf+(row_ch-lpad+1), calc_row_ch-(row_ch-lpad));
         }
-
-/*
-        if(h == 15){
-            for(int i = 0; i < row_ch; i++){
-                cout << (int)(processed_image+idx)[i] << " ";
-            }
-            cout << endl;
-        }
-*/
         p_partial_buf+=calc_row_ch;
         idx+=row_ch;
         h++;
