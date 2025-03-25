@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <cstring>
 #include <iostream>
 
@@ -253,7 +254,7 @@ int ImageProcessor::rotate() {
     unsigned char * p_partial_buf = partial_buf;
     long long idx = 0;
     int h = 0;
-    
+
     if(!processed_image) return 1;
     memset(processed_image, 0, processed_image_size);
     
@@ -267,47 +268,16 @@ int ImageProcessor::rotate() {
             h++;
             continue;
         }
-        
-        // case: using entire sphere
-        if (eratio == 360 || (eratio == 0 && sratio == 0)) {
-            memcpy(processed_image+idx, p_partial_buf, calc_rows[h-tpad]*3);
-        } else {
-            // normal cases
-            int row_ch = rows[h]*3; 
-            int calc_row_ch = calc_rows[h-tpad]*3; 
-            int lpad = ((int)((sratio/360.0)*rows[h]))*3;  
-            
-            if (eratio > sratio) {
-                // normal case (ex: sratio=0, eratio=180)
-                // prevent Segmentation fault (ex: row_ch-lpad < calc_row_ch)
-                int copy_len = min(row_ch-lpad, calc_row_ch);
-                memcpy(processed_image+(idx+lpad), p_partial_buf, copy_len);
-                
-                // if remainder data -> copy to start of row
-                if(row_ch-lpad < calc_row_ch) {
-                    memcpy(processed_image+idx, p_partial_buf+(row_ch-lpad), calc_row_ch-(row_ch-lpad));
-                }
-            } else {
-                // wraparound case (ex: sratio=300, eratio=60)
-                // calculate actual data length (ex: 300->60 = 120 degrees)
-                double actual_ratio = (360.0 - sratio + eratio) / 360.0;
-                int actual_data_len = (int)(rows[h] * actual_ratio) * 3;
-                
-                // first copy: start -> end 
-                int first_part_len = row_ch - lpad;
-                memcpy(processed_image+(idx+lpad), p_partial_buf, 
-                       std::min(first_part_len, actual_data_len));
-                
-                // if remainder data -> copy to start of row
-                if (first_part_len < actual_data_len) {
-                    int remaining_len = std::min(actual_data_len - first_part_len, lpad);
-                    memcpy(processed_image+idx, p_partial_buf+first_part_len, remaining_len);
-                }
-            }
+        int al = alias[h] >= 0 ? alias[h] : rows[h]+alias[h];
+        int lpad = (((int)((sratio/360.0)*rows[h]))*3+al)%rows[h];
+        int row_ch= rows[h]*3;
+        int calc_row_ch = calc_rows[h-tpad]*3;
+        memcpy(processed_image+(idx+lpad), p_partial_buf, min(row_ch-lpad, calc_row_ch));
+        if(row_ch-lpad < calc_row_ch){
+            memcpy(processed_image+idx, p_partial_buf+(row_ch-lpad+1), calc_row_ch-(row_ch-lpad));
         }
-        
-        p_partial_buf += calc_rows[h-tpad]*3;
-        idx += rows[h]*3;
+        p_partial_buf+=calc_row_ch;
+        idx+=row_ch;
         h++;
     }
     
