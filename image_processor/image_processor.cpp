@@ -105,7 +105,7 @@ int ImageProcessor::mask_mean(unsigned char *image) {
 
     for (int i = 0; i < calc_row_size; i++) {
         double mask_width = (calc_rows[i] > 0) ? (double)width / calc_rows[i] : 1.0;
-
+        
         for (int j = 0; j < calc_rows[i]; j++) {
             int xpos = mask_width * j + mask_width/2;
             int ypos = i * mask_height + mask_height/2;
@@ -167,7 +167,7 @@ int ImageProcessor::mask(unsigned char *image) {
         double mask_width = (calc_rows[i] > 0) ? (double)width / calc_rows[i] : 1.0;
 
         for (int j = 0; j < calc_rows[i]; j++) {
-            int xpos = mask_width * j + mask_width/2;
+            int xpos = std::round(mask_width * j + mask_width/2);
             int ypos = i * mask_height + mask_height/2;
 
 /*
