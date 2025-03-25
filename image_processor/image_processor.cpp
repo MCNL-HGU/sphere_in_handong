@@ -1,12 +1,16 @@
 #include <cstdio>
 #include <cstring>
+#include <math.h>
 #include <iostream>
 
 using namespace std;
 
-#define BGR_RPOS_CH(H, W, X, Y) (((Y)*(W)*3) + ((X) * 3) + 0)
+#define BGR_RPOS_CH(H, W, X, Y) (((Y)*(W)*3) + ((X) * 3) + 2)
 #define BGR_GPOS_CH(H, W, X, Y) (((Y)*(W)*3) + ((X) * 3) + 1)
-#define BGR_BPOS_CH(H, W, X, Y) (((Y)*(W)*3) + ((X) * 3) + 2)
+#define BGR_BPOS_CH(H, W, X, Y) (((Y)*(W)*3) + ((X) * 3) + 0)
+#define RGB_RPOS_CH(H, W, X, Y) (((Y)*(W)*3) + ((X) * 3) + 0)
+#define RGB_GPOS_CH(H, W, X, Y) (((Y)*(W)*3) + ((X) * 3) + 1)
+#define RGB_BPOS_CH(H, W, X, Y) (((Y)*(W)*3) + ((X) * 3) + 2)
 
 #define RGB_UINT32_MASK 0xFF
 
@@ -93,6 +97,42 @@ int ImageProcessor::calc_row(){
     return 0;
 }
 
+int ImageProcessor::mask_mean(unsigned char *image) {
+    if (!rows || !calc_rows || !partial_buf) return 1;
+
+    int mask_height = std::max(1, height / calc_row_size);
+    int idx = 0;
+
+    for (int i = 0; i < calc_row_size; i++) {
+        double mask_width = (calc_rows[i] > 0) ? (double)width / calc_rows[i] : 1.0;
+
+        for (int j = 0; j < calc_rows[i]; j++) {
+            int xpos = mask_width * j + mask_width/2;
+            int ypos = i * mask_height + mask_height/2;
+            int rsum = 0, gsum = 0, bsum=0;
+
+            for (int xmask = 0; xmask < (int)mask_width; xmask++) {
+                for (int ymask = 0; ymask < mask_height; ymask++) {
+                    int xpos = std::min(width - 1, (int)std::round(mask_width * j + xmask));
+                    int ypos = std::min(height - 1, i * mask_height + ymask);
+
+                    rsum += image[BGR_RPOS_CH(height, width, xpos, ypos)];
+                    gsum += image[BGR_GPOS_CH(height, width, xpos, ypos)];
+                    bsum += image[BGR_BPOS_CH(height, width, xpos, ypos)];
+                }
+            }
+   
+            if (idx + 3 < partial_buf_size) {  // Prevent buffer overflow
+                partial_buf[idx] = gsum/(mask_width*mask_height);
+                partial_buf[idx + 1] = rsum/(mask_width*mask_height);
+                partial_buf[idx + 2] = bsum/(mask_width*mask_height);
+                idx += 3;
+           }
+        }
+    }
+    return 0;
+}
+
 int ImageProcessor::mask(uint32_t *image) {
     if (!rows || !calc_rows || !partial_buf) return 1;
 
@@ -108,8 +148,8 @@ int ImageProcessor::mask(uint32_t *image) {
 
             if (idx + 3 < partial_buf_size) {  // Prevent buffer overflow
                 partial_buf[i] = RGB_GPOS_UINT32(height, width, xpos, ypos);
-                partial_buf[i+1] = RGB_RPOS_UINT32(height, width, xpos, ypos);
-                partial_buf[i+2] = RGB_BPOS_UINT32(height, width, xpos, ypos);
+                partial_buf[i+1] = RGB_BPOS_UINT32(height, width, xpos, ypos);
+                partial_buf[i+2] = RGB_RPOS_UINT32(height, width, xpos, ypos);
                 idx += 3;
             }
         }
@@ -143,9 +183,9 @@ int ImageProcessor::mask(unsigned char *image) {
             }
 */         
             if (idx + 3 < partial_buf_size) {  // Prevent buffer overflow
-                partial_buf[idx] = image[BGR_BPOS_CH(height, width, xpos, ypos)];    
-                partial_buf[idx + 1] = image[BGR_GPOS_CH(height, width, xpos, ypos)]; 
-                partial_buf[idx + 2] = image[BGR_RPOS_CH(height, width, xpos, ypos)]; 
+                partial_buf[idx] = image[BGR_GPOS_CH(height, width, xpos, ypos)];    
+                partial_buf[idx + 1] = image[BGR_RPOS_CH(height, width, xpos, ypos)]; 
+                partial_buf[idx + 2] = image[BGR_BPOS_CH(height, width, xpos, ypos)]; 
                 idx += 3;
             }
         }
