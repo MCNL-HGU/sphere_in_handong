@@ -3,9 +3,9 @@
 
 using namespace std;
 
-#define BGR_RPOS_CH(H, W, X, Y) (((Y)*(W)*3) + ((X) * 3) + 0)
+#define BGR_RPOS_CH(H, W, X, Y) (((Y)*(W)*3) + ((X) * 3) + 2)
 #define BGR_GPOS_CH(H, W, X, Y) (((Y)*(W)*3) + ((X) * 3) + 1)
-#define BGR_BPOS_CH(H, W, X, Y) (((Y)*(W)*3) + ((X) * 3) + 2)
+#define BGR_BPOS_CH(H, W, X, Y) (((Y)*(W)*3) + ((X) * 3))
 
 #define RGB_UINT32_MASK 0xFF
 
@@ -58,33 +58,17 @@ class ImageProcessor{
  */
 int ImageProcessor::calc_row(){
     int *p_rows = rows+tpad;
-    double dratio; 
+    int dratio = eratio-sratio;
     int sum = 0;
-
     if(!rows) return 1;
     if(!calc_rows) return 1;
-
-    // calculate dratio
-    if(eratio > sratio) {
-        dratio = eratio - sratio;
-    } else {
-        dratio = 360.0 - sratio + eratio;
-    }
-
     if(dratio < 30) return 2;
-
     for(int i = 0; i < calc_row_size; i++){
         calc_rows[i] = *(p_rows+i)*(dratio/360.0);
         sum+=calc_rows[i];
     }
-
-    if(partial_buf) {
-        delete[] partial_buf;
-    }
     partial_buf_size = sum*3;
     partial_buf = new unsigned char[partial_buf_size];
-    memset(partial_buf, 0, partial_buf_size);
-
     for(int i = 0; i < calc_row_size; i++){
         cout << calc_rows[i] << ',';
     }
@@ -129,6 +113,8 @@ int ImageProcessor::mask(unsigned char *image) {
             int xpos = mask_width * j + mask_width/2;
             int ypos = i * mask_height + mask_height/2;
 
+
+
 /*
             for (int xmask = 0; xmask < (int)mask_width; xmask++) {
                 for (int ymask = 0; ymask < mask_height; ymask++) {
@@ -142,9 +128,9 @@ int ImageProcessor::mask(unsigned char *image) {
             }
 */         
             if (idx + 3 < partial_buf_size) {  // Prevent buffer overflow
-                partial_buf[idx] = image[BGR_BPOS_CH(height, width, xpos, ypos)];    
-                partial_buf[idx + 1] = image[BGR_GPOS_CH(height, width, xpos, ypos)]; 
-                partial_buf[idx + 2] = image[BGR_RPOS_CH(height, width, xpos, ypos)]; 
+                partial_buf[idx] = image[BGR_GPOS_CH(height, width, xpos, ypos)];
+                partial_buf[idx + 1] = image[BGR_RPOS_CH(height, width, xpos, ypos)];
+                partial_buf[idx + 2] = image[BGR_BPOS_CH(height, width, xpos, ypos)];
                 idx += 3;
             }
         }
@@ -201,115 +187,49 @@ int ImageProcessor::mask(unsigned char *image) {
     return 0;
 }
 */
-
-// int ImageProcessor::rotate(){
-//     unsigned char * p_partial_buf = partial_buf;
-//     long long idx = 0;
-//     int h = 0;
-//     if(!processed_image) return 1;
-// /*
-//     for(int i = 0; i < partial_buf_size; i+=3){
-//         cout << "(" << (unsigned int)partial_buf[i] << " " << (unsigned int)partial_buf[i+1] << " " << (unsigned int)partial_buf[i+2] << ")";
-//     }
-  
-//   */
-//     //cout << endl;
-//     //cout << processed_image_size << " " << sratio << endl;
-//     memset(processed_image, 0, processed_image_size);
-//     while(idx < processed_image_size){
-//         if(h >= tpad+calc_row_size){
-//             break;
-//         }
-//         if(h < tpad){
-//             idx+=rows[h]*3;
-//             h++;
-//             continue;
-//         }
-//         int lpad = ((int)((sratio/360.0)*rows[h]))*3;
-//         int row_ch= rows[h]*3;
-//         int calc_row_ch = calc_rows[h-tpad]*3;
-//         memcpy(processed_image+(idx+lpad), p_partial_buf, min(row_ch-lpad, calc_row_ch));
-//         //cout << lpad << "," << row_ch << "," << calc_row_ch << endl;
-//         if(row_ch-lpad < calc_row_ch){
-//             memcpy(processed_image+idx, p_partial_buf+(row_ch-lpad+1), calc_row_ch-(row_ch-lpad));
-//         }
-
-// /*
-//         if(h == 15){
-//             for(int i = 0; i < row_ch; i++){
-//                 cout << (int)(processed_image+idx)[i] << " ";
-//             }
-//             cout << endl;
-//         }
-// */
-//         p_partial_buf+=calc_row_ch;
-//         idx+=row_ch;
-//         h++;
-//     }
-//     return 0;
-// }
-
-int ImageProcessor::rotate() {
+int ImageProcessor::rotate(){
     unsigned char * p_partial_buf = partial_buf;
     long long idx = 0;
     int h = 0;
-    
     if(!processed_image) return 1;
+/*
+    for(int i = 0; i < partial_buf_size; i+=3){
+        cout << "(" << (unsigned int)partial_buf[i] << " " << (unsigned int)partial_buf[i+1] << " " << (unsigned int)partial_buf[i+2] << ")";
+    }
+  
+  */
+    //cout << endl;
+    //cout << processed_image_size << " " << sratio << endl;
     memset(processed_image, 0, processed_image_size);
-    
-    while(idx < processed_image_size) {
-        if(h >= tpad+calc_row_size) {
+    while(idx < processed_image_size){
+        if(h >= tpad+calc_row_size){
             break;
         }
-        
-        if(h < tpad) {
-            idx += rows[h]*3;
+        if(h < tpad){
+            idx+=rows[h]*3;
             h++;
             continue;
         }
-        
-        // case: using entire sphere
-        if (eratio == 360 || (eratio == 0 && sratio == 0)) {
-            memcpy(processed_image+idx, p_partial_buf, calc_rows[h-tpad]*3);
-        } else {
-            // normal cases
-            int row_ch = rows[h]*3; 
-            int calc_row_ch = calc_rows[h-tpad]*3; 
-            int lpad = ((int)((sratio/360.0)*rows[h]))*3;  
-            
-            if (eratio > sratio) {
-                // normal case (ex: sratio=0, eratio=180)
-                // prevent Segmentation fault (ex: row_ch-lpad < calc_row_ch)
-                int copy_len = min(row_ch-lpad, calc_row_ch);
-                memcpy(processed_image+(idx+lpad), p_partial_buf, copy_len);
-                
-                // if remainder data -> copy to start of row
-                if(row_ch-lpad < calc_row_ch) {
-                    memcpy(processed_image+idx, p_partial_buf+(row_ch-lpad), calc_row_ch-(row_ch-lpad));
-                }
-            } else {
-                // wraparound case (ex: sratio=300, eratio=60)
-                // calculate actual data length (ex: 300->60 = 120 degrees)
-                double actual_ratio = (360.0 - sratio + eratio) / 360.0;
-                int actual_data_len = (int)(rows[h] * actual_ratio) * 3;
-                
-                // first copy: start -> end 
-                int first_part_len = row_ch - lpad;
-                memcpy(processed_image+(idx+lpad), p_partial_buf, 
-                       std::min(first_part_len, actual_data_len));
-                
-                // if remainder data -> copy to start of row
-                if (first_part_len < actual_data_len) {
-                    int remaining_len = std::min(actual_data_len - first_part_len, lpad);
-                    memcpy(processed_image+idx, p_partial_buf+first_part_len, remaining_len);
-                }
-            }
+        int lpad = ((int)((sratio/360.0)*rows[h]))*3;
+        int row_ch= rows[h]*3;
+        int calc_row_ch = calc_rows[h-tpad]*3;
+        memcpy(processed_image+(idx+lpad), p_partial_buf, min(row_ch-lpad, calc_row_ch));
+        //cout << lpad << "," << row_ch << "," << calc_row_ch << endl;
+        if(row_ch-lpad < calc_row_ch){
+            memcpy(processed_image+idx, p_partial_buf+(row_ch-lpad+1), calc_row_ch-(row_ch-lpad));
         }
-        
-        p_partial_buf += calc_rows[h-tpad]*3;
-        idx += rows[h]*3;
+
+/*
+        if(h == 15){
+            for(int i = 0; i < row_ch; i++){
+                cout << (int)(processed_image+idx)[i] << " ";
+            }
+            cout << endl;
+        }
+*/
+        p_partial_buf+=calc_row_ch;
+        idx+=row_ch;
         h++;
     }
-    
     return 0;
 }
