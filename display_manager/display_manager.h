@@ -30,19 +30,22 @@ class DisplayManager{
                 exit(EXIT_FAILURE);
             }
             height = this->json_root["height"].asInt();
-            int led_size = this->json_root["leds"].size();
+            int led_size = height;
             if(height != led_size){
                 cerr << "Size of led array should be same with height. (height : " << height << ", led_size : " << led_size << ")"<<endl;
+               // exit(EXIT_FAILURE);
             }
 
             this->leds = new int[led_size];
             for(int i = 0; i < led_size; i++){
-                this->leds[i] = this->json_root["leds"][i].asInt();
+                this->leds[i] = this->json_root["led"][i].asInt();
+                cout << this->leds[i] << " ";
             }
             
-            int alias_size= this->json_root["leds"].size();
+            int alias_size = height;
             if(height != alias_size){
                 cerr << "Size of led array should be same with height. (height : " << height << ", led_size : " << alias_size << ")"<<endl;
+                exit(EXIT_FAILURE);
             }
 
             this->alias = new int[alias_size];
@@ -57,11 +60,13 @@ class DisplayManager{
             this->processor->mask(pixels);
             this->processor->rotate();
             sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
+            sender->next();
         }
         void display(unsigned char* pixels){
             this->processor->mask(pixels);
             this->processor->rotate();
             sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
+            sender->next();
         }
     private:
         string json_path;

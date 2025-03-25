@@ -269,7 +269,8 @@ int ImageProcessor::rotate() {
             continue;
         }
         int al = alias[h] >= 0 ? alias[h] : rows[h]+alias[h];
-        int lpad = (((int)((sratio/360.0)*rows[h]))*3+al)%rows[h];
+        al *= 3;
+        int lpad = (((int)((sratio/360.0)*rows[h]))*3+al)%(rows[h]*3);
         int row_ch= rows[h]*3;
         int calc_row_ch = calc_rows[h-tpad]*3;
         memcpy(processed_image+(idx+lpad), p_partial_buf, min(row_ch-lpad, calc_row_ch));
@@ -280,6 +281,5 @@ int ImageProcessor::rotate() {
         idx+=row_ch;
         h++;
     }
-    
     return 0;
 }

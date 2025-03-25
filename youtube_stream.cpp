@@ -1,6 +1,5 @@
-#include "packet_sender/e131_sender.h"
-#include "image_processor/image_processor.h"
 #include "packet_sender/sleep.h"
+#include "display_manager/display_manager.h"
 
 #include <iostream>
 #include <fstream>
@@ -43,6 +42,7 @@ int main(int argc, char* argv[]) {
         cerr << " Usage: " << argv[0] << " -url <YouTube URL>" << endl;
         return -1;
     }
+    
 
     string youtube_url = argv[2];
     cout << " Fetching stream URL for: " << youtube_url << endl;
@@ -73,9 +73,7 @@ int main(int argc, char* argv[]) {
     cv::Mat frame, frame_rgb;
     cap >> frame;
 
-    ImageProcessor *image = new ImageProcessor(frame.rows, frame.cols, 0, 0, 360, 0, rows, 54);
-    E131Sender *sender = new E131Sender(ip);
-
+    DisplayManager * display= new DisplayManager(frame.rows, frame.cols, 0, 360, 0, 0, "192.168.50.72");
     cout << frame.rows << " " << frame.cols << endl;
     while (true) {
         cap >> frame;
@@ -91,9 +89,8 @@ int main(int argc, char* argv[]) {
         unsigned char *rgb_data = frame.data;
 
         // 🔹 LED 패널로 데이터 매핑 및 전송
-        image->mask(rgb_data);
-        image->rotate();
-        unsigned char* im = image->get_processed_image();
+        
+        display->display(rgb_data);
         
         /*
         cout << "start" << endl;
@@ -102,8 +99,6 @@ int main(int argc, char* argv[]) {
         }
         cout << endl;
 */
-        sender->send(image->get_processed_image(), 48771);
-        sender->next();
         usleep(30000);
 
 
@@ -117,8 +112,5 @@ int main(int argc, char* argv[]) {
 
     cap.release();
     cv::destroyAllWindows();
-    delete image;
-    delete sender;
-
     return 0;
 }
