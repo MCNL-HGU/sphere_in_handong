@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
+#include "image_processor.h"
 
 using namespace std;
 
@@ -47,7 +48,6 @@ class ImageProcessor{
 };
 */
 
-#include "image_processor.h"
 
 /**
  * calculate row for spherical display using end-ratio, start-ratio
@@ -128,6 +128,31 @@ int ImageProcessor::mask(unsigned char *image) {
                 }
             }
 */         
+            if (idx + 3 < partial_buf_size) {  // Prevent buffer overflow
+                partial_buf[idx] = image[BGR_GPOS_CH(height, width, xpos, ypos)];
+                partial_buf[idx + 1] = image[BGR_RPOS_CH(height, width, xpos, ypos)];
+                partial_buf[idx + 2] = image[BGR_BPOS_CH(height, width, xpos, ypos)];
+                idx += 3;
+            }
+        }
+    }
+    
+    return 0;
+}
+
+int ImageProcessor::mask_itp(unsigned char *image) {
+    if (!rows || !calc_rows || !partial_buf) return 1;
+
+    int mask_height = std::max(1, height / calc_row_size);
+    int idx = 0;
+
+    for (int i = 0; i < calc_row_size; i++) {
+        double mask_width = (calc_rows[i] > 0) ? (double)width / calc_rows[i] : 1.0;
+
+        for (int j = 0; j < calc_rows[i]; j++) {
+            int xpos = mask_width * j + mask_width/2;
+            int ypos = i * mask_height + mask_height/2;
+
             if (idx + 3 < partial_buf_size) {  // Prevent buffer overflow
                 partial_buf[idx] = image[BGR_GPOS_CH(height, width, xpos, ypos)];
                 partial_buf[idx + 1] = image[BGR_RPOS_CH(height, width, xpos, ypos)];

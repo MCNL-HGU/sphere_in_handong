@@ -29,6 +29,7 @@ class ImageProcessor{
         int calc_row();
         int mask(unsigned char * image);
         int mask(uint32_t * image);
+        int mask_itp(unsigned char *image);
         int rotate();
         int set_tpad(int tpad){
             this->tpad = tpad;
