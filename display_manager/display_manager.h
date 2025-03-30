@@ -69,6 +69,12 @@ class DisplayManager{
             sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
             sender->next();
         }
+        void display_itp(unsigned char* pixels){
+            this->processor->mask_itp(pixels);
+            this->processor->rotate();
+            sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
+            sender->next();
+        }
         void display_mean(unsigned char* pixels){
             this->processor->mask_mean(pixels);
             this->processor->rotate();
