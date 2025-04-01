@@ -239,7 +239,6 @@ int ImageProcessor::mask_itp(unsigned char *image) {
             partial_buf[idx++] = B;
         }
     }
-
     return 0;
 }
 

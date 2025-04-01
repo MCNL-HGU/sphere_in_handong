@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
 
         // 🔹 LED 패널로 데이터 매핑 및 전송
         
-        display->display(rgb_data);
+        display->display_itp(rgb_data);
         
         /*
         cout << "start" << endl;
