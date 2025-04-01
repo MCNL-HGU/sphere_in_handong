@@ -97,6 +97,46 @@ int ImageProcessor::calc_row(){
     return 0;
 }
 
+int ImageProcessor::blur() {
+    if (!image) return 1;
+
+    unsigned char* temp = new unsigned char[width * height * 3];
+
+    const int kernel[3][3] = {
+        {1, 2, 1},
+        {2, 4, 2},
+        {1, 2, 1}
+    };
+    const int kernel_sum = 16;
+
+    for (int y = 1; y < height - 1; y++) {
+        for (int x = 1; x < width - 1; x++) {
+            int rsum = 0, gsum = 0, bsum = 0;
+
+            for (int ky = -1; ky <= 1; ky++) {
+                for (int kx = -1; kx <= 1; kx++) {
+                    int px = x + kx;
+                    int py = y + ky;
+                    int idx = (py * width + px) * 3;
+                    int weight = kernel[ky + 1][kx + 1];
+                    bsum += image[idx + 0] * weight;
+                    gsum += image[idx + 1] * weight;
+                    rsum += image[idx + 2] * weight;
+                }
+            }
+
+            int out_idx = (y * width + x) * 3;
+            temp[out_idx + 0] = bsum / kernel_sum;
+            temp[out_idx + 1] = gsum / kernel_sum;
+            temp[out_idx + 2] = rsum / kernel_sum;
+        }
+    }
+
+    memcpy(image, temp, width * height * 3);
+    delete[] temp;
+    return 0;
+}
+
 int ImageProcessor::mask_mean(unsigned char *image) {
     if (!rows || !calc_rows || !partial_buf) return 1;
 

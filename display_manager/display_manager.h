@@ -56,27 +56,31 @@ class DisplayManager{
             processor = new ImageProcessor(imheight, imwidth, tpad, sratio, eratio, dpad, leds, this->height, this->alias);
             processor->calc_row();
         }
-        void display(uint32_t* pixels){
+        void display(uint32_t* pixels, bool blur){
             this->processor->mask(pixels);
+            if(blur) processor->blur();
             this->processor->rotate();
             sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
             sender->next();
         }
         
-        void display(unsigned char* pixels){
+        void display(unsigned char* pixels, bool blur){
             this->processor->mask(pixels);
+            if(blur) processor->blur();
             this->processor->rotate();
             sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
             sender->next();
         }
-        void display_itp(unsigned char* pixels){
+        void display_itp(unsigned char* pixels, bool blur){
             this->processor->mask_itp(pixels);
+            if(blur) processor->blur();
             this->processor->rotate();
             sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
             sender->next();
         }
-        void display_mean(unsigned char* pixels){
+        void display_mean(unsigned char* pixels, bool blur){
             this->processor->mask_mean(pixels);
+            if(blur) processor->blur();
             this->processor->rotate();
             sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
             sender->next();
