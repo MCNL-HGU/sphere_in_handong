@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
     cv::Mat frame, frame_rgb;
     cap >> frame;
 
-    DisplayManager * display= new DisplayManager(frame.rows, frame.cols, 0, 360, 0, 0, "192.168.50.72");
+    DisplayManager * display= new DisplayManager(frame.rows, frame.cols, 120, 240, 10, 0, "192.168.50.72");
     cout << frame.rows << " " << frame.cols << endl;
     while (true) {
         cap >> frame;
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
 
         // 🔹 LED 패널로 데이터 매핑 및 전송
         
-        display->display_itp(rgb_data);
+        display->display(rgb_data, false);
         
         /*
         cout << "start" << endl;
