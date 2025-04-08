@@ -7,7 +7,8 @@ youtube_stream: youtube_stream.cpp image_processor/*.* packet_sender/*.*
 	g++ -std=c++17 -o youtube_stream youtube_stream.cpp packet_sender/e131_sender.cpp image_processor/image_processor.cpp -L/path/to/e131/lib -le131 $(pkg-config --cflags --libs opencv4)
 
 video: video_test.cpp
-	g++ -std=c++17 -o video_test video_test.cpp packet_sender/e131_sender.cpp image_processor/image_processor.cpp display_manager/display_manager.cpp -L/path/to/e131/lib -le131 $(pkg-config --cflags --libs opencv4 sdl2) -ljsoncpp
+	g++ -std=c++17 -o video_test video_test.cpp packet_sender/e131_sender.cpp image_processor/image_processor.cpp  -L/path/to/e131/lib -le131 $(pkg-config --cflags --libs opencv4 sdl2) -ljsoncpp
 
-image: image_test.cpp image_processor/*.* packet_sender/*.*
+
+\image: image_test.cpp image_processor/*.* packet_sender/*.*
 	g++ -std=c++17 -o image_test image_test.cpp packet_sender/e131_sender.cpp image_processor/image_processor.cpp -L/path/to/e131/lib -le131 $(pkg-config --cflags --libs opencv4) -ljsoncpp

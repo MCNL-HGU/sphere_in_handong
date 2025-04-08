@@ -1,12 +1,17 @@
 #include "e131_sender.h"
 #include <cstring>
 #include <unistd.h>
+#include <iostream>
+
+using namespace std;
+
 
 int E131Sender::e131_socket_close(){
     return close(sockfd);
 }
 
 int E131Sender::send(uint8_t * pixels, uint16_t length){
+    //cout << "send";
     int universe_count = length/512;
     int last_universe = length%512;
     for(int universe = 1; universe <= universe_count; universe++){

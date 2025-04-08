@@ -33,7 +33,7 @@ int main() {
 
         // OpenCV 프레임 데이터를 unsigned char* 형식으로 가져오기
         unsigned char *rgb_data = frame.data;
-        display->display_itp(rgb_data, false);
+        display->display_itp(rgb_data, true);
 
         
         // OpenCV 화면 출력

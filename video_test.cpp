@@ -57,13 +57,30 @@ int main() {
     DisplayManager * display= new DisplayManager(frame.rows, frame.cols, 0, 360, 0, 0, "192.168.50.72");
     E131Sender *sender = new E131Sender(ip);
     bool running =true;
+    int f = 0;
     while (running) {
         cap >> frame;
-        if (frame.empty()) break;
+        if (frame.empty()){
+            cap.open(video_path);
+            cout<< "RESTART"<< endl;
+            continue;
+        } 
     
         unsigned char *rgb_data = frame.data;
-        display->display_mean(rgb_data,false);
-        cv::imshow("Local Video Stream", frame);
+        if(f%20 == 0) cout << "change~~" << endl;
+        if(!(f/20))
+            display-> display_itp(rgb_data,false);
+        else if(!(f/40))
+            display-> display_itp(rgb_data,true);
+        else if(!(f/60))
+            display-> display_mean(rgb_data,false);
+        else if(!(f/80))
+            display-> display_mean(rgb_data,true);
+        else if(!(f/100))
+            display-> display(rgb_data,false);
+        else
+            display-> display(rgb_data,true);
+        //cv::imshow("Local Video Stream", frame);
     
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
@@ -75,8 +92,9 @@ int main() {
             }
         }
     
-        // Avoid burning 100% CPU
-        SDL_Delay(10);
+        //Avoid burning 100% CPU
+        SDL_Delay(300);
+        f++;
     }
     cap.release();
     cv::destroyAllWindows();

@@ -31,6 +31,7 @@ class ImageProcessor{
         int mask_mean(unsigned char * image);
         int mask(uint32_t * image);
         int mask_itp(unsigned char *image);
+        int mask_itp_big(unsigned char *image);
         int rotate();
         int blur();
         int set_tpad(int tpad){

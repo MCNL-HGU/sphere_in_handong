@@ -57,30 +57,39 @@ class DisplayManager{
             processor->calc_row();
         }
         void display(uint32_t* pixels, bool blur){
+            if(blur) this->processor->blur();
             this->processor->mask(pixels);
-            if(blur) processor->blur();
             this->processor->rotate();
             sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
             sender->next();
         }
         
         void display(unsigned char* pixels, bool blur){
-            this->processor->mask(pixels);
-            if(blur) processor->blur();
+            this->processor->image = pixels;
+            if(blur) {
+                this->processor->blur();
+            }
+            this->processor->mask(this->processor->image);
             this->processor->rotate();
             sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
             sender->next();
         }
         void display_itp(unsigned char* pixels, bool blur){
-            this->processor->mask_itp(pixels);
-            if(blur) processor->blur();
+            this->processor->image = pixels;
+            if(blur) {
+                this->processor->blur();
+            }
+            this->processor->mask_itp(this->processor->image);
             this->processor->rotate();
             sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
             sender->next();
         }
         void display_mean(unsigned char* pixels, bool blur){
-            this->processor->mask_mean(pixels);
-            if(blur) processor->blur();
+            this->processor->image = pixels;
+            if(blur) {
+                this->processor->blur();
+            }
+            this->processor->mask_mean(this->processor->image);
             this->processor->rotate();
             sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
             sender->next();
