@@ -1,0 +1,176 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 29  of event 'cpu_atom/cycles/P'
+# Event count (approx.): 20523341
+#
+# Overhead  Command  Shared Object  Symbol
+# ........  .......  .............  ......
+#
+
+
+# Samples: 8K of event 'cpu_core/cycles/P'
+# Event count (approx.): 8112480483
+#
+# Overhead  Command     Shared Object                 Symbol                                                                                                                                    
+# ........  ..........  ............................  ..........................................................................................................................................
+#
+    86.12%  image_perf  image_perf                    [.] ImageProcessor::blur()
+     6.96%  image_perf  image_perf                    [.] ImageProcessor::mask_mean(unsigned char*)
+     2.06%  image_perf  image_perf                    [.] int const& std::min<int>(int const&, int const&)
+     1.28%  image_perf  libm.so.6                     [.] __round
+     0.42%  image_perf  ld-linux-x86-64.so.2          [.] do_lookup_x
+     0.36%  image_perf  image_perf                    [.] ImageProcessor::mask_itp(unsigned char*)
+     0.29%  image_perf  image_perf                    [.] round@plt
+     0.10%  image_perf  [kernel.kallsyms]             [k] __d_lookup_rcu
+     0.09%  image_perf  image_perf                    [.] ImageProcessor::mask(unsigned char*)
+     0.09%  image_perf  ld-linux-x86-64.so.2          [.] strcmp
+     0.08%  image_perf  libgdcmDICT.so.3.0.22         [.] gdcm::Dict::LoadDefault()
+     0.07%  image_perf  [kernel.kallsyms]             [k] __alloc_skb
+     0.05%  image_perf  ld-linux-x86-64.so.2          [.] _dl_relocate_object
+     0.05%  image_perf  libc.so.6                     [.] isspace
+     0.05%  image_perf  ld-linux-x86-64.so.2          [.] check_match
+     0.04%  image_perf  [kernel.kallsyms]             [k] __siphash_unaligned
+     0.03%  image_perf  [kernel.kallsyms]             [k] zap_present_ptes
+     0.03%  image_perf  libgdcmDSED.so.3.0.22         [.] gdcm::PrivateTag::operator<(gdcm::PrivateTag const&) const
+     0.03%  image_perf  libc.so.6                     [.] _int_free
+     0.03%  image_perf  [kernel.kallsyms]             [k] link_path_walk.part.0.constprop.0
+     0.03%  image_perf  [kernel.kallsyms]             [k] hash_name
+     0.03%  image_perf  [kernel.kallsyms]             [k] __count_memcg_events
+     0.03%  image_perf  libc.so.6                     [.] __strlen_avx2
+     0.03%  image_perf  libc.so.6                     [.] _int_malloc
+     0.03%  image_perf  libstdc++.so.6.0.33           [.] std::_Rb_tree_insert_and_rebalance(bool, std::_Rb_tree_node_base*, std::_Rb_tree_node_base*, std::_Rb_tree_node_base&)
+     0.03%  image_perf  libjpeg.so.8.2.2              [.] jpeg_fill_bit_buffer
+     0.03%  image_perf  [kernel.kallsyms]             [k] read_tsc
+     0.02%  image_perf  [kernel.kallsyms]             [k] exc_page_fault
+     0.02%  image_perf  [kernel.kallsyms]             [k] __flow_hash_from_keys
+     0.02%  image_perf  [kernel.kallsyms]             [k] __kmalloc_node_track_caller_noprof
+     0.02%  image_perf  [kernel.kallsyms]             [k] __domain_mapping
+     0.02%  image_perf  libgdcmDICT.so.3.0.22         [.] gdcm::PrivateTag::operator<(gdcm::PrivateTag const&) const@plt
+     0.02%  image_perf  [kernel.kallsyms]             [k] walk_component
+     0.02%  image_perf  libgdcmDICT.so.3.0.22         [.] gdcm::PrivateDict::LoadDefault()
+     0.02%  image_perf  [kernel.kallsyms]             [k] pick_link
+     0.02%  image_perf  libopencv_core.so.4.6.0       [.] 0x00000000000ef401
+     0.02%  image_perf  [kernel.kallsyms]             [k] cgroup_rstat_updated
+     0.02%  image_perf  [kernel.kallsyms]             [k] atime_needs_update
+     0.02%  image_perf  [kernel.kallsyms]             [k] copy_page
+     0.02%  image_perf  [kernel.kallsyms]             [k] error_entry
+     0.02%  image_perf  libopencv_imgcodecs.so.4.6.0  [.] 0x00000000000238f8
+     0.02%  image_perf  [kernel.kallsyms]             [k] check_stack_object
+     0.02%  image_perf  [kernel.kallsyms]             [k] kmalloc_size_roundup
+     0.02%  image_perf  [kernel.kallsyms]             [k] siphash_3u32
+     0.02%  image_perf  [kernel.kallsyms]             [k] __sys_sendto
+     0.01%  image_perf  [kernel.kallsyms]             [k] update_curr
+     0.01%  image_perf  [kernel.kallsyms]             [k] clear_page_erms
+     0.01%  image_perf  [kernel.kallsyms]             [k] __ip_append_data
+     0.01%  image_perf  [kernel.kallsyms]             [k] perf_iterate_ctx
+     0.01%  image_perf  [kernel.kallsyms]             [k] folios_put_refs
+     0.01%  image_perf  [kernel.kallsyms]             [k] folio_remove_rmap_ptes
+     0.01%  image_perf  [kernel.kallsyms]             [k] __dev_xmit_skb
+     0.01%  image_perf  [kernel.kallsyms]             [k] __rcu_read_unlock
+     0.01%  image_perf  image_perf                    [.] ImageProcessor::rotate()
+     0.01%  image_perf  [kernel.kallsyms]             [k] igc_xmit_frame_ring
+     0.01%  image_perf  libm.so.6                     [.] __floor_sse41
+     0.01%  image_perf  [kernel.kallsyms]             [k] kmem_cache_alloc_node_noprof
+     0.01%  image_perf  [kernel.kallsyms]             [k] _raw_spin_lock
+     0.01%  image_perf  [kernel.kallsyms]             [k] __dev_queue_xmit
+     0.01%  image_perf  [kernel.kallsyms]             [k] __folio_throttle_swaprate
+     0.01%  image_perf  [kernel.kallsyms]             [k] entry_SYSRETQ_unsafe_stack
+     0.01%  image_perf  [kernel.kallsyms]             [k] try_charge_memcg
+     0.01%  image_perf  [kernel.kallsyms]             [k] igc_tx_map.isra.0
+     0.01%  image_perf  image_perf                    [.] floor@plt
+     0.01%  image_perf  [kernel.kallsyms]             [k] clflush_cache_range
+     0.01%  image_perf  libc.so.6                     [.] __libc_sendto
+     0.01%  image_perf  [kernel.kallsyms]             [k] xfrm_lookup_with_ifid
+     0.01%  image_perf  [kernel.kallsyms]             [k] iommu_dma_alloc_iova
+     0.01%  image_perf  [kernel.kallsyms]             [k] pmd_val
+     0.01%  image_perf  [kernel.kallsyms]             [k] lookup_bh_lru
+     0.01%  image_perf  [kernel.kallsyms]             [k] dequeue_skb
+     0.01%  image_perf  [kernel.kallsyms]             [k] __rmqueue_pcplist
+     0.01%  image_perf  [kernel.kallsyms]             [k] do_syscall_64
+     0.01%  image_perf  [kernel.kallsyms]             [k] slab_update_freelist.isra.0
+     0.01%  image_perf  [kernel.kallsyms]             [k] lookup_fast
+     0.01%  image_perf  [kernel.kallsyms]             [k] strncpy_from_user
+     0.01%  image_perf  libc.so.6                     [.] __memmove_avx_unaligned_erms
+     0.01%  image_perf  [kernel.kallsyms]             [k] skb_push
+     0.01%  image_perf  libc.so.6                     [.] malloc
+     0.01%  image_perf  [kernel.kallsyms]             [k] __legitimize_mnt
+     0.01%  image_perf  [kernel.kallsyms]             [k] rmqueue_bulk
+     0.01%  image_perf  [kernel.kallsyms]             [k] folio_batch_move_lru
+     0.01%  image_perf  ld-linux-x86-64.so.2          [.] _dl_fixup
+     0.01%  image_perf  libc.so.6                     [.] __strcmp_avx2
+     0.01%  image_perf  [kernel.kallsyms]             [k] rb_next
+     0.01%  image_perf  libgdcmDICT.so.3.0.22         [.] 0x000000000013a05d
+     0.01%  image_perf  [kernel.kallsyms]             [k] __slab_free
+     0.01%  image_perf  [kernel.kallsyms]             [k] __handle_mm_fault
+     0.01%  image_perf  libstdc++.so.6.0.33           [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::find(char const*, unsigned long, unsigned long) const
+     0.01%  image_perf  libc.so.6                     [.] _int_free_maybe_consolidate
+     0.01%  image_perf  [kernel.kallsyms]             [k] vfs_getattr_nosec
+     0.01%  image_perf  libopencv_imgcodecs.so.4.6.0  [.] 0x000000000000e000
+     0.01%  image_perf  [kernel.kallsyms]             [k] lru_gen_del_folio.constprop.0
+     0.01%  image_perf  [kernel.kallsyms]             [k] __kmalloc_noprof
+     0.01%  image_perf  libcharls.so.2.4.2            [.] 0x0000000000006b32
+     0.01%  image_perf  libopencv_imgproc.so.4.6.0    [.] 0x000000000019fd0f
+     0.01%  image_perf  [kernel.kallsyms]             [k] generic_permission
+     0.01%  image_perf  [kernel.kallsyms]             [k] security_inode_follow_link
+     0.01%  image_perf  [kernel.kallsyms]             [k] common_perm_cond
+     0.01%  image_perf  [kernel.kallsyms]             [k] cp_new_stat
+     0.01%  image_perf  [kernel.kallsyms]             [k] __virt_addr_valid
+     0.01%  image_perf  [kernel.kallsyms]             [k] htree_dirblock_to_tree
+     0.01%  image_perf  [kernel.kallsyms]             [k] lockref_get_not_dead
+     0.01%  image_perf  libgdcmDICT.so.3.0.22         [.] gdcm::DictEntry::CheckKeywordAgainstName(char const*, char const*)
+     0.01%  image_perf  [kernel.kallsyms]             [k] __lookup_mnt
+     0.01%  image_perf  [kernel.kallsyms]             [k] filemap_map_pages
+     0.01%  image_perf  [kernel.kallsyms]             [k] str2hashbuf_signed
+     0.01%  image_perf  libp11-kit.so.0.3.1           [.] 0x0000000000109940
+     0.01%  image_perf  [kernel.kallsyms]             [k] lock_vma_under_rcu
+     0.01%  image_perf  ld-linux-x86-64.so.2          [.] _dl_call_fini
+     0.01%  image_perf  libproj.so.25.9.4.0           [.] 0x00000000001668c3
+     0.01%  image_perf  [kernel.kallsyms]             [k] native_irq_return_iret
+     0.01%  image_perf  [kernel.kallsyms]             [k] mod_objcg_state
+     0.01%  image_perf  libc.so.6                     [.] __resolv_conf_load
+     0.01%  image_perf  [kernel.kallsyms]             [k] sync_regs
+     0.01%  image_perf  libjpeg.so.8.2.2              [.] 0x0000000000027c1b
+     0.01%  image_perf  [kernel.kallsyms]             [k] get_mem_cgroup_from_mm
+     0.01%  image_perf  libjpeg.so.8.2.2              [.] 0x000000000002833f
+     0.01%  image_perf  libjpeg.so.8.2.2              [.] 0x0000000000027bd1
+     0.01%  image_perf  libjpeg.so.8.2.2              [.] 0x000000000005040e
+     0.01%  image_perf  libc.so.6                     [.] __printf_buffer_write
+     0.01%  image_perf  libc.so.6                     [.] __strcasecmp_l_avx2
+     0.01%  image_perf  [kernel.kallsyms]             [k] next_uptodate_folio
+     0.01%  image_perf  libc.so.6                     [.] __memchr_avx2
+     0.01%  image_perf  libjpeg.so.8.2.2              [.] 0x0000000000027c10
+     0.01%  image_perf  [kernel.kallsyms]             [k] exit_mmap
+     0.01%  image_perf  libopencv_imgcodecs.so.4.6.0  [.] 0x000000000002390a
+     0.01%  image_perf  [kernel.kallsyms]             [k] security_file_release
+     0.01%  image_perf  libjpeg.so.8.2.2              [.] 0x00000000000501c5
+     0.01%  image_perf  libjpeg.so.8.2.2              [.] 0x0000000000050091
+     0.01%  image_perf  libopencv_imgcodecs.so.4.6.0  [.] 0x0000000000023914
+     0.01%  image_perf  libjpeg.so.8.2.2              [.] 0x00000000000218e1
+     0.01%  image_perf  [kernel.kallsyms]             [k] netdev_pick_tx
+     0.01%  image_perf  libjpeg.so.8.2.2              [.] 0x0000000000050529
+     0.01%  image_perf  libjpeg.so.8.2.2              [.] 0x000000000005009b
+     0.01%  image_perf  libjpeg.so.8.2.2              [.] 0x00000000000503ca
+     0.01%  image_perf  libjpeg.so.8.2.2              [.] 0x0000000000028378
+     0.01%  image_perf  [kernel.kallsyms]             [k] skb_set_owner_w
+     0.01%  image_perf  [kernel.kallsyms]             [k] __ip_local_out
+     0.00%  image_perf  [kernel.kallsyms]             [k] import_ubuf
+     0.00%  image_perf  [kernel.kallsyms]             [k] ip_route_output_key_hash_rcu
+     0.00%  image_perf  [kernel.kallsyms]             [k] ipv4_mtu
+     0.00%  image_perf  [kernel.kallsyms]             [k] __ip_make_skb
+     0.00%  image_perf  [kernel.kallsyms]             [k] rseq_update_cpu_node_id
+     0.00%  image_perf  [kernel.kallsyms]             [k] dst_release
+     0.00%  image_perf  [kernel.kallsyms]             [k] fib_table_lookup
+     0.00%  image_perf  [kernel.kallsyms]             [k] syscall_return_via_sysret
+     0.00%  image_perf  [kernel.kallsyms]             [k] restore_fpregs_from_fpstate
+     0.00%  image_perf  [kernel.kallsyms]             [k] nmi_cpu_backtrace
+     0.00%  image_perf  [kernel.kallsyms]             [k] native_write_msr
+     0.00%  image_perf  [kernel.kallsyms]             [k] intel_pmu_handle_irq
+     0.00%  image_perf  [kernel.kallsyms]             [k] perf_ctx_enable
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

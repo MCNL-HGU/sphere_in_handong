@@ -8,13 +8,14 @@
 #include <vector>
 #include <cstdlib>   // system() 사용
 #include <opencv2/opencv.hpp>
+#include <SDL2/SDL.h>
 
 
 using namespace std;
 
 // yt-dlp를 실행하여 YouTube 영상의 직접 URL을 가져오는 함수
 string getYouTubeStreamURL(const string& youtube_url) {
-    string command = "yt-dlp -g " + youtube_url + " 2>/dev/null";  // 오류 출력을 숨김
+    string command = "yt-dlp -S \"res:1080\" -g " + youtube_url + " 2>/dev/null";  // 오류 출력을 숨김
     FILE* pipe = popen(command.c_str(), "r");  // yt-dlp 실행 결과를 읽기 위한 파이프
     if (!pipe) {
         cerr << " Error: Failed to run yt-dlp." << endl;
@@ -56,6 +57,28 @@ int main(int argc, char* argv[]) {
 
     cout << " Stream URL: " << stream_url << endl;
 
+    //CGAME CONTROLLER INIT SETTING
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
+        std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
+        return -1;
+    }
+
+    SDL_GameController *controller = nullptr;
+    for (int i = 0; i < SDL_NumJoysticks(); ++i) {
+        if (SDL_IsGameController(i)) {
+            controller = SDL_GameControllerOpen(i);
+            if (controller) {
+                std::cout << "Game controller connected: " << SDL_GameControllerName(controller) << std::endl;
+                break;
+            }
+        }
+    }
+    
+    if (!controller) {
+        std::cerr << "No compatible game controller found." << std::endl;
+        SDL_Quit();
+        return -1;
+    }
     
     cv::VideoCapture cap(stream_url);
     if (!cap.isOpened()) {
@@ -63,51 +86,40 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    int rows[54] = {
-        104, 126, 141, 157, 172, 187, 199, 211, 224, 235, 246, 255, 263, 272, 279, 286, 293, 299,
-        306, 311, 316, 320, 326, 331, 335, 337, 342, 345, 347, 351, 353, 355, 357, 356, 358, 359,
-        359, 359, 359, 358, 358, 356, 355, 353, 351, 348, 345, 342, 338, 334, 330, 325, 319, 314
-    };
-
     const char *ip = "192.168.50.72";
     cv::Mat frame, frame_rgb;
     cap >> frame;
 
-    DisplayManager * display= new DisplayManager(frame.rows, frame.cols, 120, 240, 10, 0, "192.168.50.72");
+    DisplayManager * display= new DisplayManager(frame.rows, frame.cols, 90, 270, 0, 0, "192.168.50.72");
     cout << frame.rows << " " << frame.cols << endl;
-    while (true) {
+    bool running =true;
+    while (running) {
         cap >> frame;
         if (frame.empty()){
 		    cap.open(stream_url);
 		    continue;
 	    }
-
-        // 🔹 BGR → RGB 변환
-        //cv::cvtColor(frame, frame_rgb, cv::COLOR_BGR2RGB);
-
-        // 🔹 unsigned char* 데이터 변환
         unsigned char *rgb_data = frame.data;
 
-        // 🔹 LED 패널로 데이터 매핑 및 전송
-        
         display->display_itp(rgb_data, false);
         
-        /*
-        cout << "start" << endl;
-        for(int i = 0; i < frame.rows * frame.cols * 3; i+=3){
-            cout << "(" << (unsigned int)im[i] << " " << (unsigned int)im[i+1] << " " << (unsigned int)im[i+2] << ")";
-        }
-        cout << endl;
-*/
-        usleep(30000);
+	//cv::imshow("youtube", frame);
+       // usleep(10000);
 
-
-        // 🔹 변환된 RGB 프레임을 다시 BGR로 변환하여 화면에 출력
-        // cv::cvtColor(frame_rgb, frame, cv::COLOR_RGB2BGR);
-
-
-        // 🔹 ESC 키(27)로 종료
         if (cv::waitKey(30) == 27) break;
+
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_CONTROLLERBUTTONDOWN) {
+                if (e.cbutton.button == SDL_CONTROLLER_BUTTON_B) {
+                    std::cout << "B button pressed. Exiting..." << std::endl;
+                    running = false;
+                }
+            }
+        }
+    
+       // Avoid burning 100% CPU
+        SDL_Delay(50);
     }
 
     cap.release();

@@ -4,12 +4,14 @@
 #include "display_manager/display_manager.h"
 #include <iostream>
 #include <vector>
+#include <chrono>
 #include <unistd.h> // usleep 사용
 
 using namespace std;
 
 int main() {
-    std::string image_path = "line_test.png"; 
+    int mode = 0;
+    std::string image_path = "image/red_wave.jpg"; 
 
     cv::Mat frame = cv::imread(image_path);
     if (frame.empty()) {
@@ -23,26 +25,61 @@ int main() {
         359, 359, 359, 358, 358, 356, 355, 353, 351, 348, 345, 342, 338, 334, 330, 325, 319, 314
     };
 
+    const char func[6][16] = {"itp", "itp-blur", "mean", "mean-blur", "center", "center-blur"};
     const char *ip = "192.168.50.72"; 
-    DisplayManager * display= new DisplayManager(frame.rows, frame.cols, 0, 360, 0, 0, "192.168.50.72");
+    DisplayManager * display= new DisplayManager(frame.rows, frame.cols, 90, 270, 5, 0, "192.168.50.72");
     E131Sender *sender = new E131Sender(ip);
-
+    
     while (true) {
-        //BGR → RGB 변환 (필요하면 활성화)
-    //    cv::cvtColor(frame, frame_rgb, cv::COLOR_BGR2RGB);
-
-        // OpenCV 프레임 데이터를 unsigned char* 형식으로 가져오기
         unsigned char *rgb_data = frame.data;
-        display->display_itp(rgb_data, true);
+        auto start = chrono::high_resolution_clock::now();
+        switch(mode){
+            case 0:
+                display->display_itp(rgb_data, false);
+                break;
+            case 1:
+                display->display_itp(rgb_data, true);
+                display->free_image();
+                break;
+            case 2:
+                display->display_mean(rgb_data, false);
+                break;
+            case 3:
+                display->display_mean(rgb_data, true);
+                display->free_image();
+                break;
+            case 4:
+                display->display(rgb_data, false);
+                break;
+            case 5:
+                display->display(rgb_data, true);
+                display->free_image();
+                break;
+            default:
+                break;
+        }
+        auto end = chrono::high_resolution_clock::now();
+
+        auto duration = chrono::duration_cast<std::chrono::microseconds>(end-start);
+        cout << "1time" << duration.count() << " usec" << endl;
 
         
         // OpenCV 화면 출력
         cv::imshow("Static Image Display", frame);
+        int key = cv::waitKey(500);
 
         // ESC 키(27) 누르면 종료
-        if (cv::waitKey(100) == 27) break;
-    }
+        if (key == 'q') break;
+        else if(key == 'a') {
+            mode = mode-1 < 0 ? 5 : mode-1;
+            cout << "mode : " << func[mode] << endl;
+        }
+        else if(key == 'd'){
+            mode = (mode+1)%6;
+            cout << "mode : " << func[mode] << endl;
+        }
 
+    }
     cv::destroyAllWindows();
     delete sender;
 

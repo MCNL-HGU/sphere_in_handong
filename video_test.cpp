@@ -3,7 +3,7 @@
 #include "display_manager/display_manager.h"
 #include <SDL2/SDL.h>
 
-
+#include <time.h>
 #include <iostream>
 #include <vector>
 #include <unistd.h> // usleep 사용
@@ -11,7 +11,7 @@
 using namespace std;
 
 int main() {
-    std::string video_path = "cry.MOV";
+    std::string video_path = "video/cry.MOV";
 
     cv::VideoCapture cap(video_path);
     if (!cap.isOpened()) {
@@ -54,7 +54,7 @@ int main() {
     }
     const char *ip = "192.168.50.72";
     
-    DisplayManager * display= new DisplayManager(frame.rows, frame.cols, 0, 360, 0, 0, "192.168.50.72");
+    DisplayManager * display= new DisplayManager(frame.rows, frame.cols, 90, 270, 0, 0, "192.168.50.72");
     E131Sender *sender = new E131Sender(ip);
     bool running =true;
     int f = 0;
@@ -68,19 +68,25 @@ int main() {
     
         unsigned char *rgb_data = frame.data;
         if(f%20 == 0) cout << "change~~" << endl;
-        if(!(f/20))
+        if(f == 120) break;
+        if(!(f/20)){
             display-> display_itp(rgb_data,false);
-        else if(!(f/40))
-            display-> display_itp(rgb_data,true);
-        else if(!(f/60))
+        }
+        else if(!(f/40)){
+            display-> display_itp(rgb_data,false);
+        }
+        else if(!(f/60)){
             display-> display_mean(rgb_data,false);
-        else if(!(f/80))
-            display-> display_mean(rgb_data,true);
-        else if(!(f/100))
+        }
+        else if(!(f/80)){
+            display-> display_mean(rgb_data,false);
+        }
+        else if(!(f/100)){
             display-> display(rgb_data,false);
-        else
-            display-> display(rgb_data,true);
-        //cv::imshow("Local Video Stream", frame);
+        }
+        else{
+            display-> display(rgb_data,false);
+        }
     
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
@@ -92,7 +98,7 @@ int main() {
             }
         }
     
-        //Avoid burning 100% CPU
+       // Avoid burning 100% CPU
         SDL_Delay(300);
         f++;
     }

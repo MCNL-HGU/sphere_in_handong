@@ -94,6 +94,9 @@ class DisplayManager{
             sender->send(this->processor->get_processed_image(), this->processor->get_processed_image_size());
             sender->next();
         }
+        void free_image(){
+            processor->free_image();
+        }
     private:
         string json_path;
         Json::Value json_root;

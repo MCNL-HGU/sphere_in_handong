@@ -132,8 +132,7 @@ int ImageProcessor::blur() {
         }
     }
 
-    memcpy(image, temp, width * height * 3);
-    delete[] temp;
+    image = temp;
     return 0;
 }
 
@@ -328,7 +327,55 @@ int ImageProcessor::mask_itp(unsigned char *image) {
     }
     return 0;
 }
+/*
+int ImageProcessor::mask_itp(unsigned char *image) {
+    if (!rows || !calc_rows || !partial_buf) return 1;
 
+    int mask_height = max(1, height / calc_row_size);
+    int idx = 0;
+
+    for (int i = 0; i < calc_row_size; i++) {
+        double mask_width = (calc_rows[i] > 0) ? (double)width / calc_rows[i] : 1.0;
+
+        for (int j = 0; j < calc_rows[i]; j++) {
+            double xpos_f = mask_width * j + mask_width / 2.0;
+            double ypos_f = i * mask_height + mask_height / 2.0;
+
+            int x0 = (int)floor(xpos_f);
+            int y0 = (int)floor(ypos_f);
+            int x1 = min(x0 + 1, width - 1);
+            int y1 = min(y0 + 1, height - 1);
+            double alpha = xpos_f - x0;
+            double beta = ypos_f - y0;
+
+            int idx00 = (y0 * width + x0) * 3;
+            int idx10 = (y0 * width + x1) * 3;
+            int idx01 = (y1 * width + x0) * 3;
+            int idx11 = (y1 * width + x1) * 3;
+
+            unsigned char R = (1 - alpha) * (1 - beta) * image[idx00 + 2] +
+                              alpha       * (1 - beta) * image[idx10 + 2] +
+                              (1 - alpha) * beta       * image[idx01 + 2] +
+                              alpha       * beta       * image[idx11 + 2];
+
+            unsigned char G = (1 - alpha) * (1 - beta) * image[idx00 + 1] +
+                              alpha       * (1 - beta) * image[idx10 + 1] +
+                              (1 - alpha) * beta       * image[idx01 + 1] +
+                              alpha       * beta       * image[idx11 + 1];
+
+            unsigned char B = (1 - alpha) * (1 - beta) * image[idx00 + 0] +
+                              alpha       * (1 - beta) * image[idx10 + 0] +
+                              (1 - alpha) * beta       * image[idx01 + 0] +
+                              alpha       * beta       * image[idx11 + 0];
+
+            partial_buf[idx++] = G;
+            partial_buf[idx++] = R;
+            partial_buf[idx++] = B;
+        }
+    }
+    return 0;
+}
+*/
 /*
 int ImageProcessor::mask(unsigned char *image) {
     if (!rows || !calc_rows || !partial_buf) return 1;

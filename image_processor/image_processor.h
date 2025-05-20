@@ -51,7 +51,9 @@ class ImageProcessor{
             delete[] partial_buf;
             delete[] processed_image;
         }
-
+        void free_image(){
+            delete[] image;
+        }
     private:
         int width;
         int height;
