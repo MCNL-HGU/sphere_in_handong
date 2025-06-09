@@ -14,26 +14,26 @@
 
 </div>
 
----
 
-## 📌 프로젝트 개요
+
+
+## Project Overview
 
 **Sphere in Handong**은 구형 디스플레이 장치 위에 2D 이미지 또는 영상을 실시간으로 투영하기 위한 **LED 구 디스플레이 제어 시스템**입니다. 사용자는 간단한 이미지 입력만으로도 Sphere의 전면에 정확하게 맵핑된 결과를 확인할 수 있으며, 실시간 렌더링 및 제어 기능을 제공합니다.
 
+
+## Key Features
+
+- Sphere(구체형 디스플레이)에 2D 이미지 실시간 투영
+- 이미지 다운샘플링 및 맵핑 (Nearest, Bilinear, Average Pooling 지원)
+- E1.31(sACN) 기반 실시간 조명 패킷 전송
+- SDL2 기반 UI와 실시간 전송 상태 시각화
+- BeagleBone Black 기반의 하드웨어 연동
+- 1만 6천 개 이상의 LED 실시간 동기화 지원
+
 ---
 
-## 🛠️ 주요 기능
-
-- ✅ Sphere(구체형 디스플레이)에 2D 이미지 실시간 투영
-- ✅ 이미지 다운샘플링 및 맵핑 (Nearest, Bilinear, Average Pooling 지원)
-- ✅ E1.31(sACN) 기반 실시간 조명 패킷 전송
-- ✅ SDL2 기반 UI와 실시간 전송 상태 시각화
-- ✅ BeagleBone Black 기반의 하드웨어 연동
-- ✅ 1만 6천 개 이상의 LED 실시간 동기화 지원
-
----
-
-## ⚙️ 사용 기술
+## Technology Stack
 
 | 항목        | 설명                                                                 |
 |-------------|----------------------------------------------------------------------|
@@ -45,9 +45,9 @@
 
 ---
 
-## 📦 설치 및 실행
+## Installation & Execution
 
-### 1. 의존성 설치
+### 1. Dependency Installation 
 #### 1.1 libe131   
 https://github.com/hhromic/libe131
 #### 1.2 yt-dlp
@@ -58,10 +58,38 @@ sudo apt update
 sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libjsoncpp-dev
 ```
 
-### 2. 빌드
+### 2. Build
 ```bash
 git clone https://github.com/MCNL-HGU/sphere_in_handong.git
 cd sphere_in_handong
 make
+```
+
+### 3. Run
+```bash
 ./sdl_ui
 ```
+
+## Project Structure
+```bash
+.
+├── include/
+│   └── image_processor.h      # 이미지 변환 및 LED 맵핑 함수 정의
+├── src/
+│   ├── image_processor.cpp    # 맵핑 알고리즘 (nearest, bilinear 등)
+│   ├── sphere_viewer.cpp      # 메인 렌더링 루프 + 소켓 전송
+│   └── sdl_ui.cpp             # SDL2 UI 처리
+├── assets/                    # 샘플 이미지 및 리소스
+├── CMakeLists.txt
+└── README.md
+```
+## Contributors
+
+| 이름 | 역할 | 연락처 |
+|------|------|--------|
+| 정성호 | 프로젝트 리드, 시스템 설계 | [@sungho](https://github.com/onuyon) |
+| 이창건 | yt-dlp 연동, 이미지 유튜브 영상 | [@changun](https://github.com/hami0713) |
+| 이온유 | SDL2 기반 UI 설계, LED 제어 | [@onyu](https://github.com/gippeumee) |
+| 황수현 | 프로젝트 계획, Sphere 영상 제작 | [@suihun](https://github.com/gippeumee) |
+
+> 🙌 함께한 MCNL 연구실 팀원들께 감사드립니다.
