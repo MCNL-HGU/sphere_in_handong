@@ -22,6 +22,7 @@
 **Sphere in Handong**은 구형 디스플레이 장치 위에 2D 이미지 또는 영상을 실시간으로 투영하기 위한 **LED 구 디스플레이 제어 시스템**입니다. 사용자는 간단한 이미지 입력만으로도 Sphere의 전면에 정확하게 맵핑된 결과를 확인할 수 있으며, 실시간 렌더링 및 제어 기능을 제공합니다.
 
 
+---
 ## Key Features
 
 - Sphere(구체형 디스플레이)에 2D 이미지 실시간 투영
@@ -70,6 +71,7 @@ make
 ./sdl_ui
 ```
 
+---
 ## Project Structure
 ```bash
 .
@@ -83,6 +85,8 @@ make
 ├── CMakeLists.txt
 └── README.md
 ```
+
+---
 ## Contributors
 
 | 이름 | 역할 | 연락처 |
